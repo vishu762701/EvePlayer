@@ -1439,7 +1439,7 @@ class MainActivity : Activity() {
                     e as? android.app.RecoverableSecurityException
 
                 if (r != null) {
-                    startActivityForResult(
+                    startIntentSenderForResult(
                         r.userAction
                             .actionIntent
                             .intentSender,
@@ -1551,7 +1551,7 @@ class MainActivity : Activity() {
                     e as? android.app.RecoverableSecurityException
 
                 if (r != null) {
-                    startActivityForResult(
+                    startIntentSenderForResult(
                         r.userAction
                             .actionIntent
                             .intentSender,

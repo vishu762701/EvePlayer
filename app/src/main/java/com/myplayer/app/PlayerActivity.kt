@@ -30,7 +30,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import android.app.Activity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.C
@@ -53,7 +53,7 @@ private const val WC =
     ViewGroup.LayoutParams.WRAP_CONTENT
 
 @SuppressLint("UnsafeOptInUsageError")
-class PlayerActivity : ComponentActivity() {
+class PlayerActivity : Activity() {
 
     private lateinit var player: ExoPlayer
     private lateinit var view: PlayerView
