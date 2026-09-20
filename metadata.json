@@ -1,0 +1,6 @@
+{
+  "name": "eve",
+  "description": "Full-featured offline media player with high-performance video & audio playback, gestures, equalizer, and playlist management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
