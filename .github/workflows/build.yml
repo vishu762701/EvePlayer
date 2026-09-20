@@ -90,4 +90,3 @@ jobs:
         with:
           name: EVEPlayer-debug
           path: final-apk/EVEPlayer-debug.apk
-git add .github/workflows/build.yml && git commit -m "Build APK directly from original ZIP" && git push origin main
