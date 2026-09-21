@@ -1,0 +1,92 @@
+name: Build EVE Player APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Extract original project
+        run: |
+          rm -rf /tmp/eve-project
+          mkdir -p /tmp/eve-project
+          unzip -q eve.zip -d /tmp/eve-project
+
+          echo "=== Extracted structure ==="
+          find /tmp/eve-project -maxdepth 2 -type f | head -100
+
+      - name: Detect Android project
+        run: |
+          PROJECT=$(find /tmp/eve-project -name settings.gradle.kts -o -name settings.gradle | head -1)
+
+          if [ -z "$PROJECT" ]; then
+            echo "ERROR: Android Gradle project not found in eve.zip"
+            exit 1
+          fi
+
+          PROJECT_DIR=$(dirname "$PROJECT")
+          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
+
+          echo "Detected project: $PROJECT_DIR"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
+
+      - name: Prepare project
+        run: |
+          cd "$PROJECT_DIR"
+
+          echo "=== Gradle files ==="
+          find . -maxdepth 3 -type f \( -name "*.gradle" -o -name "*.gradle.kts" \) -print
+
+          echo "=== Android modules ==="
+          find . -maxdepth 3 -type d -name src -print
+
+          chmod +x gradlew 2>/dev/null || true
+
+      - name: Build APK
+        run: |
+          cd "$PROJECT_DIR"
+
+          if [ -f "./gradlew" ]; then
+            ./gradlew :app:assembleDebug --stacktrace
+          else
+            gradle :app:assembleDebug --stacktrace
+          fi
+
+      - name: Find APK
+        run: |
+          APK=$(find "$PROJECT_DIR" -type f -name "*.apk" | head -1)
+
+          if [ -z "$APK" ]; then
+            echo "ERROR: APK was not generated"
+            exit 1
+          fi
+
+          echo "APK FOUND:"
+          ls -lh "$APK"
+
+          mkdir -p "$GITHUB_WORKSPACE/final-apk"
+          cp "$APK" "$GITHUB_WORKSPACE/final-apk/EVEPlayer-debug.apk"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: EVEPlayer-debug
+          path: final-apk/EVEPlayer-debug.apk
