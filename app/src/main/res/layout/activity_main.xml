@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eve_black"
+    android:keepScreenOn="true">
+
+    <FrameLayout
+        android:id="@+id/video_surface_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/eve_black" />
+
+</FrameLayout>
